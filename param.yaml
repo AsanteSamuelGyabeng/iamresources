@@ -1,4 +1,4 @@
-template-file-path: ./iam-resources.yaml
+template-file-path: iam-resources.yaml
 parameters:
   Environment: dev
   Password: ''
