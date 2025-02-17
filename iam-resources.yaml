@@ -36,7 +36,7 @@ Resources:
       Groups: 
         - !Ref EC2UserGroup
       LoginProfile:
-        Password: !Sub "{{resolve:secretsmanager:${UserPassword}:SecretString}}"
+        Password: !Join ['', ['{{resolve:secretsmanager:', !Ref UserPassword, ':SecretString}}']]
         PasswordResetRequired: true
 
   S3User:
@@ -86,8 +86,6 @@ Resources:
                 Action:
                   - ssm:GetParameter
                   - secretsmanager:GetSecretValue
-                  - iam:ListUsers
-                  - iam:GetUser
                 Resource: '*'
 
   # Lambda Function
@@ -163,4 +161,4 @@ Resources:
       FunctionName: !Ref UserCreationNotifier
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
-      SourceArn: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/${UserCreationRule}
+      SourceArn: !GetAtt UserCreationRule.Arn
